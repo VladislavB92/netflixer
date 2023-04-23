@@ -17,6 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from archive.views import get_all_movies, add_movie, get_movie
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', get_all_movies, name='all-movies'),
+    path('add-movie/', add_movie, name='add-movie'),
+    path('movie/<movie_id>/', get_movie, name='get-movie')
 ]
