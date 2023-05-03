@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
-import environ
 from django.contrib import messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,20 +19,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-
-env = environ.Env(
-    DEBUG=(bool, False)
-)
-
-if os.getenv('DJANGO_DEVELOPMENT') == 'true':
-    environ.Env.read_env(os.path.join(BASE_DIR, '.local.env'))
-    DEBUG = env.get_value('DEBUG')
-else:
-    environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-    DEBUG = False
-    ALLOWED_HOSTS = ['*', ]
-
-SECRET_KEY = os.environ.get('SECRET_KEY')
+DEBUG = True
+SECRET_KEY = 'django-insecure-h7#csg7j7qg#$4q-1-edn!e4#7s%a+%o@8^(cma#x!xhiww6%0'
 
 # Application definition
 
