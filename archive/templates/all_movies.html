@@ -46,7 +46,7 @@
     </tr>
     </thead>
     <tbody>
-    {% for movie in all_movies_list %}
+    {% for movie in object_list %}
         <tr>
             <td>{{ movie.id }}</td>
             <td><a href="{% url 'get-movie' movie.id %}">{{ movie.title }}</a></td>
