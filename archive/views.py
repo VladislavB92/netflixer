@@ -4,20 +4,21 @@ from archive.models import Movie
 from django.shortcuts import render, redirect
 
 from archive.utils import delete_movie_object
+from django.views import View
 
 
-def get_all_movies(request):
-    """
-    A view that get all movie objects from the database,
-    puts it in the context and outputs to the HTML template.
-    No forms are used here.
-    """
-    all_movies = Movie.objects.all()
-
-    context = {
-        'all_movies_list': all_movies,
-    }
-    return render(request, 'all_movies.html', context)
+class AllMovies(View):
+    def get(self, request):
+        """
+        A view that get all movie objects from the database,
+        puts it in the context and outputs to the HTML template.
+        No forms are used here.
+        """
+        all_movies = Movie.objects.all()
+        context = {
+            'all_movies_list': all_movies,
+        }
+        return render(request, 'all_movies.html', context)
 
 
 def add_movie(request):
