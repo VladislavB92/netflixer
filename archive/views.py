@@ -2,9 +2,9 @@ from django.contrib import messages
 from django.http import Http404
 from archive.models import Movie
 from django.shortcuts import render, redirect
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from archive.utils import delete_movie_object
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView, View
 
 
 class AllMovies(ListView):
@@ -18,7 +18,12 @@ class AllMovies(ListView):
     model = Movie
 
 
-def add_movie(request):
+class SingleMovie(DetailView):
+    template_name = 'movie.html'
+    model = Movie
+
+
+class AddMovieView(LoginRequiredMixin, View):
     """
     Renders(opens) a new add movie HTML template,
     provides a form with inputs and tries to save the movie to the database
@@ -27,48 +32,54 @@ def add_movie(request):
     After either successful or unsuccessful new movie creation, the user is redirected to the
     all movies page.
     """
-    if request.POST:
-        title = request.POST.get('title')
-        director = request.POST.get('director')
-        year = request.POST.get('year')
-        try:
-            new_movie = Movie.objects.create(
-                title=title,
-                director=director,
-                year=year,
-            )
-            new_movie.save()
-            messages.success(request, 'The movie has been saved.')
-        except ValueError:
-            messages.error(request, 'Something went wrong. Contact devs.')
-        return redirect('all-movies')
-    context = {}
-    return render(request, 'add_movie.html', context)
+
+    def post(self, request):
+        if request.POST:
+            title = request.POST.get('title')
+            director = request.POST.get('director')
+            year = request.POST.get('year')
+            try:
+                new_movie = Movie.objects.create(
+                    title=title,
+                    director=director,
+                    year=year,
+                )
+                new_movie.save()
+                messages.success(request, 'The movie has been saved.')
+            except ValueError:
+                messages.error(request, 'Something went wrong. Contact devs.')
+            return redirect('all-movies')
+        context = {}
+        return render(request, 'add_movie.html', context)
+
+    def get(self, request):
+        context = {}
+        return render(request, 'add_movie.html', context)
 
 
 def get_movie(request, movie_id):
     """
-    A view got two logics.
-    First: a POST request, that sends us the ID of the movie we want to delete,
-    after we press the Delete button in the HTML template.
-    Then the movie is deleted, and we are redirected back to the all movies page.
-    Same goes if movie deletion was not successful.
-    Second: we try to get the movie with the movie_id that we pass to the
-    URL as parameter (GET method) and show movie details on the page.
-    """
-    if request.POST:
-        movie_to_delete = request.POST.get('movie_to_delete')
-        delete_movie_object(movie_to_delete, request)
-        return redirect('all-movies')
-
-    try:
-        movie = Movie.objects.get(id=movie_id)
-    except Movie.DoesNotExist:
-        raise Http404('Movie does not exists')
-    context = {}
-    if movie:
-        context.update({'movie': movie})
-    return render(request, 'movie.html', context)
+    # A view got two logics.
+    # First: a POST request, that sends us the ID of the movie we want to delete,
+    # after we press the Delete button in the HTML template.
+    # Then the movie is deleted, and we are redirected back to the all movies page.
+    # Same goes if movie deletion was not successful.
+    # Second: we try to get the movie with the movie_id that we pass to the
+    # URL as parameter (GET method) and show movie details on the page.
+    # """
+    # if request.POST:
+    #     movie_to_delete = request.POST.get('movie_to_delete')
+    #     delete_movie_object(movie_to_delete, request)
+    #     return redirect('all-movies')
+    #
+    # try:
+    #     movie = Movie.objects.get(id=movie_id)
+    # except Movie.DoesNotExist:
+    #     raise Http404('Movie does not exists')
+    # context = {}
+    # if movie:
+    #     context.update({'movie': movie})
+    # return render(request, 'movie.html', context)
 
 
 def delete_movie(request, movie_id):
