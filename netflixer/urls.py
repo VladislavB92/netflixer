@@ -3,7 +3,7 @@ from django.urls import path, include
 
 from archive.views import (
     AddMovieView,
-    delete_movie,
+    DeleteMovieView,
     AllMovies,
     SingleMovie,
     UpdateMovieView,
@@ -16,5 +16,5 @@ urlpatterns = [
     path('add-movie/', AddMovieView.as_view(), name='add-movie'),
     path('edit-movie/<int:pk>', UpdateMovieView.as_view(), name='edit-movie'),
     path('movie/<int:pk>/', SingleMovie.as_view(), name='get-movie'),
-    path('delete/<movie_id>', delete_movie, name='delete-movie'),
+    path('delete/<int:pk>/', DeleteMovieView.as_view(), name='delete-movie'),
 ]

@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class Movie(models.Model):
     title = models.CharField(null=False, blank=False, max_length=128)
     director = models.CharField(null=False, blank=True, max_length=128)

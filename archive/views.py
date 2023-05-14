@@ -1,13 +1,13 @@
 from archive.forms import MovieForm
 from archive.models import Movie
-from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
-from archive.utils import delete_movie_object
+from django.shortcuts import redirect
 from django.views.generic import (
     ListView,
     DetailView,
     CreateView,
     UpdateView,
+    View,
 )
 
 
@@ -43,19 +43,14 @@ class AddMovieView(LoginRequiredMixin, CreateView):
 
 
 class UpdateMovieView(LoginRequiredMixin, UpdateView):
-
     model = Movie
     form_class = MovieForm
     template_name = 'movie_form.html'
     success_url = '/'
 
 
-def delete_movie(request, movie_id):
-    """It is a GET method (because we pass movie_id as a URL parameter to get
-    the movie we want to delete from the database.
-    A delete_movie_object() function is used here to locate and try to delete the movie
-    we queried in the URL parameter.
-    In all cases we are being redirected back to the all movies list.
-    """
-    delete_movie_object(movie_id, request)
-    return redirect('all-movies')
+class DeleteMovieView(LoginRequiredMixin, View):
+    def get(self, request, **kwargs):
+        movie = Movie.objects.get(id=kwargs.get('pk'))
+        movie.delete()
+        return redirect('all-movies')
