@@ -6,7 +6,7 @@ from archive.utils import delete_movie_object
 from django.views.generic import ListView, DetailView, View
 
 
-class AllMovies(ListView):
+class AllMovies(LoginRequiredMixin, ListView):
     """
     A view that get all movie objects from the database,
     puts it in the context and outputs to the HTML template.
