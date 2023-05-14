@@ -64,9 +64,11 @@
             <td>{{ movie.director }}</td>
             <td>{{ movie.year }}</td>
             <td>
-                <button type="button" class="btn btn-danger" form="movie-to-delete" value="X">
-                    <a href="{% url 'delete-movie' movie.id %}">X</a>
-                </button>
+                {% if user.is_authenticated %}
+                    <button type="button" class="btn btn-danger" form="movie-to-delete" value="X">
+                        <a href="{% url 'delete-movie' movie.id %}">X</a>
+                    </button>
+                {% endif %}
             </td>
         </tr>
     {% endfor %}

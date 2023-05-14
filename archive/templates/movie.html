@@ -10,13 +10,15 @@
             crossorigin="anonymous"></script>
 </head>
 <body>
-<form method="post" id="delete-movie">
-    {% csrf_token %}
-    <input type="hidden" name="movie_to_delete" value="{{ object.id }}">
-    <button type="submit" class="btn btn-danger" form="delete-movie">Delete the movie</button>
-</form>
+{% if user.is_authenticated %}
+    <form method="post" id="delete-movie">
+        {% csrf_token %}
+        <input type="hidden" name="movie_to_delete" value="{{ object.id }}">
+        <button type="submit" class="btn btn-danger" form="delete-movie">Delete the movie</button>
+    </form>
 
-<button type="button" class="btn btn-warning">Edit the movie</button>
+    <button type="button" class="btn btn-warning">Edit the movie</button>
+{% endif %}
 <h1>
     {{ object.title }}
 </h1>

@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.http import Http404
 from archive.models import Movie
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
